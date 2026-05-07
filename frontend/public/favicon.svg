@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 195">
+  <!-- Pin outer -->
+  <path d="M100 186 C60 162 26 130 26 78 C26 34 59 4 100 4 C141 4 174 34 174 78 C174 130 140 162 100 186 Z" fill="#009C9D"/>
+
+  <!-- White inner circle -->
+  <circle cx="100" cy="78" r="57" fill="white"/>
+
+  <!-- Head -->
+  <circle cx="87" cy="37" r="9.5" fill="#009C9D"/>
+
+  <!-- Torso -->
+  <line x1="87" y1="46" x2="81" y2="76" stroke="#009C9D" stroke-width="11" stroke-linecap="round"/>
+
+  <!-- Right arm -->
+  <line x1="88" y1="59" x2="121" y2="64" stroke="#009C9D" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Dumbbell handle -->
+  <rect x="119" y="55" width="7" height="20" rx="3" fill="#009C9D"/>
+  <!-- Top weight -->
+  <rect x="113" y="51" width="19" height="8" rx="4" fill="#009C9D"/>
+  <!-- Bottom weight -->
+  <rect x="113" y="69" width="19" height="8" rx="4" fill="#009C9D"/>
+
+  <!-- Hip -->
+  <line x1="76" y1="76" x2="93" y2="76" stroke="#009C9D" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Left thigh -->
+  <line x1="76" y1="76" x2="59" y2="97" stroke="#009C9D" stroke-width="10" stroke-linecap="round"/>
+  <!-- Left shin -->
+  <line x1="59" y1="97" x2="69" y2="111" stroke="#009C9D" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Right thigh -->
+  <line x1="93" y1="76" x2="108" y2="97" stroke="#009C9D" stroke-width="10" stroke-linecap="round"/>
+  <!-- Right shin -->
+  <line x1="108" y1="97" x2="97" y2="111" stroke="#009C9D" stroke-width="9" stroke-linecap="round"/>
+</svg>
