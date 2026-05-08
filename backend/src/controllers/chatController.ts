@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { messagesDb, matchesDb, reportsDb } from '../models/db';
 import { v4 as uuid } from 'uuid';
+import { sendPushToUser, getUserName } from '../services/pushService';
 
 // Suggested public meetup locations
 const PUBLIC_SPOTS = [
@@ -57,6 +58,11 @@ export async function sendMessage(req: AuthRequest, res: Response): Promise<void
         createdAt: new Date(),
       }, (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
     });
+
+    // Notify recipient
+    const senderName = await getUserName(req.userId!);
+    sendPushToUser(peerId, `Message from ${senderName}`, text.length > 60 ? text.slice(0, 60) + '…' : text, '/chat');
+
     res.status(201).json(msg);
   } catch { res.status(500).json({ error: 'Server error' }); }
 }

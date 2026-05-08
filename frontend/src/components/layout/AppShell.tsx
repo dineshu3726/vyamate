@@ -2,8 +2,10 @@ import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { Home, Play, MessageCircle, User } from 'lucide-react';
 import VyaMateLogo from '../common/VyaMateLogo';
+import { usePushNotifications } from '../../hooks/usePushNotifications';
 
 export default function AppShell() {
+  usePushNotifications();
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden' }}>
       {/* Header */}

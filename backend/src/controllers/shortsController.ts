@@ -4,6 +4,7 @@ import { shortsDb, usersDb } from '../models/db';
 import { v4 as uuid } from 'uuid';
 import path from 'path';
 import fs from 'fs';
+import { sendPushToUser, getUserName } from '../services/pushService';
 
 const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -82,6 +83,11 @@ export async function clapShort(req: AuthRequest, res: Response): Promise<void> 
         usersDb.update({ _id: short.userId }, { $inc: { gritPoints: 2 } as any }, {},
           (err: Error | null) => { if (err) reject(err); else resolve(); });
       });
+      // Notify creator (not themselves)
+      if (short.userId !== req.userId) {
+        const clapperName = await getUserName(req.userId!);
+        sendPushToUser(short.userId, 'Your Short got a clap! 👏', `${clapperName} clapped your workout short`, '/shorts');
+      }
       res.json({ claps: short.claps + 1, clapped: true });
     }
   } catch { res.status(500).json({ error: 'Server error' }); }

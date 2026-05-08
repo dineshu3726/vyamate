@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { usersDb, matchesDb } from '../models/db';
 import { v4 as uuid } from 'uuid';
+import { sendPushToUser, getUserName } from '../services/pushService';
 
 // Haversine distance in miles
 function distanceMiles(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -97,17 +98,33 @@ export async function sendRequest(req: AuthRequest, res: Response): Promise<void
       matchesDb.insert({ _id: uuid(), from: req.userId, to: targetId, status: 'pending', createdAt: new Date() },
         (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
     });
+
+    // Notify target
+    const senderName = await getUserName(req.userId!);
+    sendPushToUser(targetId, 'New Match Request', `${senderName} wants to work out with you!`, '/profile');
+
     res.status(201).json(match);
   } catch { res.status(500).json({ error: 'Server error' }); }
 }
 
 export async function respondToRequest(req: AuthRequest, res: Response): Promise<void> {
-  const { matchId, action } = req.body; // action: 'accept' | 'decline'
+  const { matchId, action } = req.body;
   try {
+    const match = await new Promise<any>((resolve, reject) => {
+      matchesDb.findOne({ _id: matchId, to: req.userId }, (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
+    });
+
     await new Promise<void>((resolve, reject) => {
       matchesDb.update({ _id: matchId, to: req.userId }, { $set: { status: action === 'accept' ? 'matched' : 'declined' } }, {},
         (err: Error | null) => { if (err) reject(err); else resolve(); });
     });
+
+    // Notify requester on accept
+    if (action === 'accept' && match) {
+      const accepterName = await getUserName(req.userId!);
+      sendPushToUser(match.from, 'Match Accepted!', `${accepterName} accepted your workout request. Say hi!`, '/chat');
+    }
+
     res.json({ success: true });
   } catch { res.status(500).json({ error: 'Server error' }); }
 }

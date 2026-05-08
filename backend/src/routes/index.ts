@@ -7,6 +7,7 @@ import {
 } from '../controllers/matchController';
 import { getShorts, createShort, clapShort, saveShort } from '../controllers/shortsController';
 import { getMessages, sendMessage, safeWordReport } from '../controllers/chatController';
+import { subscribe, unsubscribe, getVapidPublicKey } from '../controllers/pushController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -44,5 +45,10 @@ router.post('/shorts/:id/save', authenticateToken, saveShort);
 router.get('/chat/:peerId', authenticateToken, getMessages);
 router.post('/chat/send', authenticateToken, sendMessage);
 router.post('/chat/safeword', authenticateToken, safeWordReport);
+
+// Push Notifications
+router.get('/push/vapid-key', authenticateToken, getVapidPublicKey);
+router.post('/push/subscribe', authenticateToken, subscribe);
+router.post('/push/unsubscribe', authenticateToken, unsubscribe);
 
 export default router;
