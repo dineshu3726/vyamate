@@ -50,6 +50,25 @@ export interface Short {
   createdAt: string;
 }
 
+export interface Beacon {
+  _id: string;
+  userId: string;
+  activity: string;
+  locationName: string;
+  message: string;
+  lat: number | null;
+  lng: number | null;
+  expiresAt: string;
+  durationMinutes: number;
+  joiners: string[];
+  minutesLeft: number;
+  dist: string | null;
+  isOwn: boolean;
+  hasJoined: boolean;
+  author: { name: string; gritPoints: number; localHero: boolean };
+  createdAt: string;
+}
+
 export interface Message {
   _id: string;
   from: string;

@@ -47,4 +47,11 @@ export const chatAPI = {
   safeWord: (reportedUserId: string) => api.post('/chat/safeword', { reportedUserId }),
 };
 
+export const beaconAPI = {
+  getAll: () => api.get('/beacons'),
+  create: (d: any) => api.post('/beacons', d),
+  join: (id: string) => api.post(`/beacons/${id}/join`),
+  delete: (id: string) => api.delete(`/beacons/${id}`),
+};
+
 export default api;

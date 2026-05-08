@@ -16,6 +16,7 @@ export const messagesDb = makeDb('messages');
 export const sessionsDb = makeDb('sessions');
 export const reportsDb = makeDb('reports');
 export const subscriptionsDb = makeDb('subscriptions');
+export const beaconsDb = makeDb('beacons');
 
 usersDb.ensureIndex({ fieldName: 'email', unique: true });
 matchesDb.ensureIndex({ fieldName: 'userIds' });
