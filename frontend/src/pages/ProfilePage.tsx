@@ -301,6 +301,13 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Admin Panel link */}
+      {user?.isAdmin && (
+        <button onClick={() => navigate('/admin')} style={{ width: '100%', padding: '13px', background: '#E0F5F5', border: '1px solid #009C9D40', borderRadius: 14, fontSize: 14, fontWeight: 700, color: 'var(--teal)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 8 }}>
+          Admin Panel
+        </button>
+      )}
+
       {/* Logout */}
       <button onClick={handleLogout} style={{ width: '100%', padding: '13px', background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 14, fontSize: 14, fontWeight: 700, color: 'var(--error)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 }}>
         <LogOut size={15} /> Sign Out

@@ -17,6 +17,8 @@ export interface User {
   lat: number | null;
   lng: number | null;
   endorsements?: Record<string, number>;
+  isAdmin?: boolean;
+  banned?: boolean;
 }
 
 export interface MatchUser extends Partial<User> {

@@ -14,6 +14,11 @@ import { createTemplate, getMyTemplates, getPublicTemplates, saveTemplate, saveF
 import { logSession, getSessionHistory, deleteSession } from '../controllers/sessionController';
 import { getAISuggestions } from '../controllers/aiController';
 import { getHabits, createHabit, deleteHabit, logHabit, unlogHabit } from '../controllers/habitController';
+import {
+  getStats, getAdminUsers, getAdminUser, banUser, toggleAdmin, deleteAdminUser,
+  resetUserPassword, getAdminReports, resolveReport, getAdminShorts, deleteAdminShort, adjustGritPoints,
+} from '../controllers/adminController';
+import { requireAdmin } from '../middleware/adminAuth';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -102,5 +107,34 @@ router.post('/habits', authenticateToken, createHabit);
 router.delete('/habits/:id', authenticateToken, deleteHabit);
 router.post('/habits/:id/log', authenticateToken, logHabit);
 router.delete('/habits/:id/log', authenticateToken, unlogHabit);
+
+// One-time admin seed (protected by ADMIN_SEED_SECRET env var)
+router.post('/admin/seed', async (req, res) => {
+  const secret = process.env.ADMIN_SEED_SECRET;
+  if (!secret) { res.status(403).json({ error: 'Seed endpoint disabled' }); return; }
+  if (req.body.secret !== secret) { res.status(403).json({ error: 'Invalid secret' }); return; }
+  const { email } = req.body;
+  if (!email) { res.status(400).json({ error: 'Email required' }); return; }
+  const { usersDb } = require('../models/db');
+  usersDb.update({ email }, { $set: { isAdmin: true } }, {}, (err: any, n: number) => {
+    if (err) { res.status(500).json({ error: 'DB error' }); return; }
+    if (n === 0) { res.status(404).json({ error: 'User not found' }); return; }
+    res.json({ success: true, message: `${email} is now admin` });
+  });
+});
+
+// Admin
+router.get('/admin/stats', authenticateToken, requireAdmin, getStats);
+router.get('/admin/users', authenticateToken, requireAdmin, getAdminUsers);
+router.get('/admin/users/:id', authenticateToken, requireAdmin, getAdminUser);
+router.put('/admin/users/:id/ban', authenticateToken, requireAdmin, banUser);
+router.put('/admin/users/:id/admin', authenticateToken, requireAdmin, toggleAdmin);
+router.delete('/admin/users/:id', authenticateToken, requireAdmin, deleteAdminUser);
+router.post('/admin/users/:id/reset-password', authenticateToken, requireAdmin, resetUserPassword);
+router.put('/admin/users/:id/grit', authenticateToken, requireAdmin, adjustGritPoints);
+router.get('/admin/reports', authenticateToken, requireAdmin, getAdminReports);
+router.put('/admin/reports/:id/resolve', authenticateToken, requireAdmin, resolveReport);
+router.get('/admin/shorts', authenticateToken, requireAdmin, getAdminShorts);
+router.delete('/admin/shorts/:id', authenticateToken, requireAdmin, deleteAdminShort);
 
 export default router;

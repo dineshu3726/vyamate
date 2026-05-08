@@ -21,6 +21,7 @@ import MapPage from './pages/MapPage';
 import SessionHistoryPage from './pages/SessionHistoryPage';
 import AISuggestionsPage from './pages/AISuggestionsPage';
 import HabitTrackerPage from './pages/HabitTrackerPage';
+import AdminPage from './pages/AdminPage';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuthStore();
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="/match/:userId" element={<MatchDetailPage />} />
           <Route path="/habits" element={<HabitTrackerPage />} />
         </Route>
+        <Route path="/admin" element={<RequireToken><AdminPage /></RequireToken>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
