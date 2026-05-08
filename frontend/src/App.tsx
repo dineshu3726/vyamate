@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage';
 import AgeGatePage from './pages/AgeGatePage';
 import VibeCheckPage from './pages/VibeCheckPage';
 import OnboardingPage from './pages/OnboardingPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 import AppShell from './components/layout/AppShell';
 import HomePage from './pages/HomePage';
 import ShortsPage from './pages/ShortsPage';
@@ -23,6 +25,8 @@ import HabitTrackerPage from './pages/HabitTrackerPage';
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuthStore();
   if (!token) return <Navigate to="/login" replace />;
+  // If logged in with temp password, must change it before anything else
+  if (user?.mustChangePassword) return <Navigate to="/change-password" replace />;
   if (!user?.ageVerified) return <Navigate to="/age-gate" replace />;
   if (!user?.vibeCheckDone) return <Navigate to="/vibe-check" replace />;
   if (!user?.activities?.length) return <Navigate to="/onboarding" replace />;
@@ -34,6 +38,12 @@ function GuestOnly({ children }: { children: React.ReactNode }) {
   return token ? <Navigate to="/" replace /> : <>{children}</>;
 }
 
+// Requires a logged-in session but doesn't enforce full onboarding
+function RequireToken({ children }: { children: React.ReactNode }) {
+  const { token } = useAuthStore();
+  return token ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -41,6 +51,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
         <Route path="/register" element={<GuestOnly><RegisterPage /></GuestOnly>} />
+        <Route path="/forgot-password" element={<GuestOnly><ForgotPasswordPage /></GuestOnly>} />
+        <Route path="/change-password" element={<RequireToken><ChangePasswordPage /></RequireToken>} />
         <Route path="/age-gate" element={<AgeGatePage />} />
         <Route path="/vibe-check" element={<VibeCheckPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />

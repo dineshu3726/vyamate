@@ -20,7 +20,11 @@ export default function LoginPage() {
       const res = await authAPI.login({ email, password });
       setAuth(res.data.user, res.data.token);
       toast.success(`Welcome back, ${res.data.user.name}!`);
-      navigate('/');
+      if (res.data.user.mustChangePassword) {
+        navigate('/change-password');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) { toast.error(err.response?.data?.error || 'Login failed'); }
     finally { setLoading(false); }
   }
@@ -52,9 +56,14 @@ export default function LoginPage() {
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            <div style={{ textAlign: 'right', marginTop: 6 }}>
+              <Link to="/forgot-password" style={{ fontSize: 13, color: 'var(--teal)', fontWeight: 600, textDecoration: 'none' }}>
+                Forgot password?
+              </Link>
+            </div>
           </div>
           <button type="submit" disabled={loading} style={submitBtn}>
-            {loading ? <Loader size={16} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} /> : null}
+            {loading ? <Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> : null}
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
@@ -78,7 +87,7 @@ const cardStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = { display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6, color: 'var(--text)' };
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '12px 14px', border: '1.5px solid var(--border)',
-  borderRadius: 10, fontSize: 15, color: 'var(--text)', background: '#fff', outline: 'none',
+  borderRadius: 10, fontSize: 15, color: 'var(--text)', background: '#fff', outline: 'none', boxSizing: 'border-box' as const,
 };
 const eyeBtn: React.CSSProperties = {
   position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',

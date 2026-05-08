@@ -8,6 +8,7 @@ export interface User {
   activities: string[];
   fitnessLevel: 'Beginner' | 'Intermediate' | 'Advanced';
   schedule: string[];
+  mustChangePassword?: boolean;
   gritPoints: number;
   localHero: boolean;
   vibeCheckDone: boolean;

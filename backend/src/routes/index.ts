@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getMe, updateProfile, uploadAvatar as uploadAvatarCtrl } from '../controllers/authController';
+import { register, login, getMe, updateProfile, uploadAvatar as uploadAvatarCtrl, forgotPassword, changePassword } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 import {
   discoverNeighbors, discoverPeers, sendRequest, respondToRequest,
@@ -42,6 +42,8 @@ router.post('/auth/login', login);
 router.get('/auth/me', authenticateToken, getMe);
 router.put('/auth/profile', authenticateToken, updateProfile);
 router.post('/auth/avatar', authenticateToken, uploadAvatar.single('avatar'), uploadAvatarCtrl);
+router.post('/auth/forgot-password', forgotPassword);
+router.post('/auth/change-password', authenticateToken, changePassword);
 
 // Matching
 router.get('/match/neighbors', authenticateToken, discoverNeighbors);

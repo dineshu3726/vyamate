@@ -3,9 +3,35 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { usersDb } from '../models/db';
 import { v4 as uuid } from 'uuid';
+import { sendTempPasswordEmail } from '../services/emailService';
 
 function signToken(userId: string) {
   return jwt.sign({ userId }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
+}
+
+function generateStrongPassword(): string {
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower = 'abcdefghjkmnpqrstuvwxyz';
+  const digits = '23456789';
+  const special = '!@#$%&*';
+  const all = upper + lower + digits + special;
+
+  // Guarantee at least one of each category
+  let pwd = [
+    upper[Math.floor(Math.random() * upper.length)],
+    upper[Math.floor(Math.random() * upper.length)],
+    lower[Math.floor(Math.random() * lower.length)],
+    lower[Math.floor(Math.random() * lower.length)],
+    digits[Math.floor(Math.random() * digits.length)],
+    digits[Math.floor(Math.random() * digits.length)],
+    special[Math.floor(Math.random() * special.length)],
+  ];
+
+  // Fill remaining to reach 12 chars
+  while (pwd.length < 12) pwd.push(all[Math.floor(Math.random() * all.length)]);
+
+  // Shuffle
+  return pwd.sort(() => Math.random() - 0.5).join('');
 }
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -14,7 +40,6 @@ export async function register(req: Request, res: Response): Promise<void> {
     res.status(400).json({ error: 'All fields required' }); return;
   }
 
-  // Age gate: must be 16+
   const birthDate = new Date(dob);
   const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
   if (age < 16) {
@@ -40,6 +65,7 @@ export async function register(req: Request, res: Response): Promise<void> {
         vibeCheckDone: false,
         ageVerified: false,
         avatar: null,
+        mustChangePassword: false,
         createdAt: new Date(),
       }, (err, doc) => { if (err) reject(err); else resolve(doc); });
     });
@@ -63,6 +89,70 @@ export async function login(req: Request, res: Response): Promise<void> {
       res.status(401).json({ error: 'Invalid credentials' }); return;
     }
     res.json({ token: signToken(user._id), user: sanitize(user) });
+  } catch { res.status(500).json({ error: 'Server error' }); }
+}
+
+export async function forgotPassword(req: Request, res: Response): Promise<void> {
+  const { email } = req.body;
+  if (!email) { res.status(400).json({ error: 'Email is required' }); return; }
+
+  try {
+    const user = await new Promise<any>((resolve, reject) => {
+      usersDb.findOne({ email: email.toLowerCase().trim() }, (err: Error | null, doc: any) => {
+        if (err) reject(err); else resolve(doc);
+      });
+    });
+
+    // Always respond success to prevent email enumeration
+    if (!user) {
+      res.json({ message: 'If that email is registered, a temporary password has been sent.' });
+      return;
+    }
+
+    const tempPassword = generateStrongPassword();
+    const hashed = await bcrypt.hash(tempPassword, 10);
+    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await new Promise<void>((resolve, reject) => {
+      usersDb.update(
+        { _id: user._id },
+        { $set: { password: hashed, mustChangePassword: true, tempPasswordExpiry: expiry } },
+        {},
+        (err: Error | null) => { if (err) reject(err); else resolve(); }
+      );
+    });
+
+    await sendTempPasswordEmail(user.email, user.name, tempPassword);
+
+    res.json({ message: 'If that email is registered, a temporary password has been sent.' });
+  } catch (err) {
+    console.error('forgotPassword error:', err);
+    res.status(500).json({ error: 'Failed to send reset email. Please try again.' });
+  }
+}
+
+export async function changePassword(req: any, res: Response): Promise<void> {
+  const { newPassword } = req.body;
+  if (!newPassword || newPassword.length < 8) {
+    res.status(400).json({ error: 'Password must be at least 8 characters' }); return;
+  }
+
+  try {
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await new Promise<void>((resolve, reject) => {
+      usersDb.update(
+        { _id: req.userId },
+        { $set: { password: hashed, mustChangePassword: false }, $unset: { tempPasswordExpiry: true } },
+        {},
+        (err: Error | null) => { if (err) reject(err); else resolve(); }
+      );
+    });
+
+    const user = await new Promise<any>((resolve, reject) => {
+      usersDb.findOne({ _id: req.userId }, (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
+    });
+
+    res.json({ user: sanitize(user) });
   } catch { res.status(500).json({ error: 'Server error' }); }
 }
 
@@ -115,6 +205,6 @@ export async function updateProfile(req: any, res: Response): Promise<void> {
 }
 
 function sanitize(u: any) {
-  const { password, ...rest } = u;
+  const { password, tempPasswordExpiry, ...rest } = u;
   return rest;
 }
