@@ -17,6 +17,7 @@ import LeaderboardPage from './pages/LeaderboardPage';
 import WorkoutTemplatesPage from './pages/WorkoutTemplatesPage';
 import MapPage from './pages/MapPage';
 import SessionHistoryPage from './pages/SessionHistoryPage';
+import AISuggestionsPage from './pages/AISuggestionsPage';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuthStore();
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/templates" element={<WorkoutTemplatesPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/sessions" element={<SessionHistoryPage />} />
+          <Route path="/ai-suggestions" element={<AISuggestionsPage />} />
           <Route path="/match/:userId" element={<MatchDetailPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

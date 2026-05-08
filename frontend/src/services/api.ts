@@ -62,6 +62,10 @@ export const leaderboardAPI = {
     api.get(`/leaderboard?type=${type}&radius=${radius}`),
 };
 
+export const aiAPI = {
+  getSuggestions: () => api.get('/ai/suggest'),
+};
+
 export const sessionAPI = {
   getHistory: () => api.get('/sessions'),
   log: (d: any) => api.post('/sessions', d),

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight, Camera, Flame } from 'lucide-react';
+import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight, Camera, Flame, Sparkles } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { authAPI, matchAPI } from '../services/api';
 import UserAvatar from '../components/common/UserAvatar';
@@ -227,6 +227,20 @@ export default function ProfilePage() {
           </div>
         </>
       )}
+
+      {/* AI Suggestions */}
+      <div onClick={() => navigate('/ai-suggestions')} style={{ background: 'linear-gradient(135deg, #667EEA15, #764BA215)', borderRadius: 14, padding: '16px', border: '1px solid #667EEA40', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #667EEA, #764BA2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Sparkles size={18} color="#fff" />
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>AI Workout Suggestions</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Personalized plans by Claude AI</div>
+          </div>
+        </div>
+        <ChevronRight size={18} color="var(--text-muted)" />
+      </div>
 
       {/* Session History */}
       <div onClick={() => navigate('/sessions')} style={{ ...section, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>

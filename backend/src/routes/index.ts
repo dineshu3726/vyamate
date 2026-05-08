@@ -12,6 +12,7 @@ import { createBeacon, getNearbyBeacons, joinBeacon, deleteBeacon } from '../con
 import { getLeaderboard } from '../controllers/leaderboardController';
 import { createTemplate, getMyTemplates, getPublicTemplates, saveTemplate, saveFromShort, deleteTemplate } from '../controllers/templateController';
 import { logSession, getSessionHistory, deleteSession } from '../controllers/sessionController';
+import { getAISuggestions } from '../controllers/aiController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -76,6 +77,9 @@ router.post('/templates', authenticateToken, createTemplate);
 router.post('/templates/:id/save', authenticateToken, saveTemplate);
 router.post('/templates/from-short/:shortId', authenticateToken, saveFromShort);
 router.delete('/templates/:id', authenticateToken, deleteTemplate);
+
+// AI Workout Suggestions
+router.get('/ai/suggest', authenticateToken, getAISuggestions);
 
 // Session History
 router.get('/sessions', authenticateToken, getSessionHistory);
