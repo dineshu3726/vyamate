@@ -18,12 +18,8 @@ export default function AppShell() {
         boxShadow: '0 2px 8px rgba(0,156,157,0.3)',
         zIndex: 10,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-          {/* Inverted logo for teal header: white pin, transparent circle, white person */}
-          <VyaMateLogo height={38} showText={false} inverted />
-          <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px', color: '#fff' }}>
-            Vya<span style={{ color: '#B2EFEF' }}>Mate</span>
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <VyaMateLogo height={44} />
         </div>
       </header>
 
