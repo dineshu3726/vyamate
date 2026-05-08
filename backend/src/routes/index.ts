@@ -116,10 +116,20 @@ router.post('/admin/seed', async (req, res) => {
   const { email } = req.body;
   if (!email) { res.status(400).json({ error: 'Email required' }); return; }
   const { usersDb } = require('../models/db');
-  usersDb.update({ email }, { $set: { isAdmin: true } }, {}, (err: any, n: number) => {
+  // Case-insensitive match
+  usersDb.find({ email: new RegExp(`^${email.trim()}$`, 'i') }, (err: any, docs: any[]) => {
     if (err) { res.status(500).json({ error: 'DB error' }); return; }
-    if (n === 0) { res.status(404).json({ error: 'User not found' }); return; }
-    res.json({ success: true, message: `${email} is now admin` });
+    if (!docs.length) {
+      // Return all emails to help debug
+      usersDb.find({}, (e2: any, all: any[]) => {
+        res.status(404).json({ error: 'User not found', registeredEmails: all.map((u: any) => u.email) });
+      });
+      return;
+    }
+    usersDb.update({ _id: docs[0]._id }, { $set: { isAdmin: true } }, {}, (err2: any) => {
+      if (err2) { res.status(500).json({ error: 'DB error' }); return; }
+      res.json({ success: true, message: `${docs[0].email} is now admin` });
+    });
   });
 });
 
