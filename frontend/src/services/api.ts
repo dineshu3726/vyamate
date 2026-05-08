@@ -25,6 +25,7 @@ export const authAPI = {
   uploadAvatar: (form: FormData) => api.post('/auth/avatar', form, { headers: { 'Content-Type': 'multipart/form-data' } }),
   forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
   changePassword: (newPassword: string) => api.post('/auth/change-password', { newPassword }),
+  updatePassword: (currentPassword: string, newPassword: string) => api.post('/auth/update-password', { currentPassword, newPassword }),
 };
 
 export const matchAPI = {

@@ -156,6 +156,42 @@ export async function changePassword(req: any, res: Response): Promise<void> {
   } catch { res.status(500).json({ error: 'Server error' }); }
 }
 
+export async function updatePassword(req: any, res: Response): Promise<void> {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: 'Current and new password are required' }); return;
+  }
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: 'New password must be at least 8 characters' }); return;
+  }
+
+  try {
+    const user = await new Promise<any>((resolve, reject) => {
+      usersDb.findOne({ _id: req.userId }, (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
+    });
+    if (!user) { res.status(404).json({ error: 'User not found' }); return; }
+
+    const valid = await bcrypt.compare(currentPassword, user.password);
+    if (!valid) { res.status(401).json({ error: 'Current password is incorrect' }); return; }
+
+    if (currentPassword === newPassword) {
+      res.status(400).json({ error: 'New password must be different from current password' }); return;
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await new Promise<void>((resolve, reject) => {
+      usersDb.update(
+        { _id: req.userId },
+        { $set: { password: hashed } },
+        {},
+        (err: Error | null) => { if (err) reject(err); else resolve(); }
+      );
+    });
+
+    res.json({ success: true });
+  } catch { res.status(500).json({ error: 'Server error' }); }
+}
+
 export async function getMe(req: any, res: Response): Promise<void> {
   try {
     const user = await new Promise<any>((resolve, reject) => {
