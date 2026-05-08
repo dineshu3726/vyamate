@@ -47,6 +47,11 @@ export const chatAPI = {
   safeWord: (reportedUserId: string) => api.post('/chat/safeword', { reportedUserId }),
 };
 
+export const leaderboardAPI = {
+  get: (type: 'global' | 'neighborhood', radius = 10) =>
+    api.get(`/leaderboard?type=${type}&radius=${radius}`),
+};
+
 export const beaconAPI = {
   getAll: () => api.get('/beacons'),
   create: (d: any) => api.post('/beacons', d),

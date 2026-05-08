@@ -9,6 +9,7 @@ import { getShorts, createShort, clapShort, saveShort } from '../controllers/sho
 import { getMessages, sendMessage, safeWordReport } from '../controllers/chatController';
 import { subscribe, unsubscribe, getVapidPublicKey } from '../controllers/pushController';
 import { createBeacon, getNearbyBeacons, joinBeacon, deleteBeacon } from '../controllers/beaconController';
+import { getLeaderboard } from '../controllers/leaderboardController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -51,6 +52,9 @@ router.post('/chat/safeword', authenticateToken, safeWordReport);
 router.get('/push/vapid-key', authenticateToken, getVapidPublicKey);
 router.post('/push/subscribe', authenticateToken, subscribe);
 router.post('/push/unsubscribe', authenticateToken, unsubscribe);
+
+// Leaderboard
+router.get('/leaderboard', authenticateToken, getLeaderboard);
 
 // Active Beacons
 router.get('/beacons', authenticateToken, getNearbyBeacons);

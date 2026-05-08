@@ -13,6 +13,7 @@ import ShortsPage from './pages/ShortsPage';
 import ChatPage from './pages/ChatPage';
 import ProfilePage from './pages/ProfilePage';
 import MatchDetailPage from './pages/MatchDetailPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuthStore();
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/chat/:peerId" element={<ChatPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/match/:userId" element={<MatchDetailPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
