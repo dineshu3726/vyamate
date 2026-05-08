@@ -76,6 +76,21 @@ export async function getMe(req: any, res: Response): Promise<void> {
   } catch { res.status(500).json({ error: 'Server error' }); }
 }
 
+export async function uploadAvatar(req: any, res: Response): Promise<void> {
+  const file = req.file;
+  if (!file) { res.status(400).json({ error: 'No file uploaded' }); return; }
+  try {
+    const avatar = `/uploads/avatars/${file.filename}`;
+    await new Promise<void>((resolve, reject) => {
+      usersDb.update({ _id: req.userId }, { $set: { avatar } }, {}, (err: Error | null) => { if (err) reject(err); else resolve(); });
+    });
+    const user = await new Promise<any>((resolve, reject) => {
+      usersDb.findOne({ _id: req.userId }, (err: Error | null, doc: any) => { if (err) reject(err); else resolve(doc); });
+    });
+    res.json(sanitize(user));
+  } catch { res.status(500).json({ error: 'Server error' }); }
+}
+
 export async function updateProfile(req: any, res: Response): Promise<void> {
   const { bio, activities, fitnessLevel, schedule, lat, lng, vibeCheckDone, ageVerified } = req.body;
   const update: any = {};

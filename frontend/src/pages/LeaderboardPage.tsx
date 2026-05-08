@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, MapPin, Globe, Loader, Star } from 'lucide-react';
+import UserAvatar from '../components/common/UserAvatar';
 import { leaderboardAPI } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
@@ -116,9 +117,7 @@ export default function LeaderboardPage() {
               <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
                 {heroes.map(h => (
                   <div key={h._id} style={{ flexShrink: 0, textAlign: 'center', width: 72 }}>
-                    <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, #F59E0B, #D97706)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 auto 6px', border: '2px solid #FDE68A' }}>
-                      {h.name.charAt(0).toUpperCase()}
-                    </div>
+                    <UserAvatar name={h.name} size={48} style={{ margin: '0 auto 6px', border: '2px solid #FDE68A' }} />
                     <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h.name}</div>
                     <div style={{ fontSize: 10, color: '#92601A', fontWeight: 600 }}>{h.gritPoints} pts</div>
                   </div>
@@ -155,9 +154,7 @@ function PodiumCard({ entry, medal, color, height }: { entry: LeaderEntry; medal
   return (
     <div style={{ flex: 1, textAlign: 'center' }}>
       <div style={{ fontSize: 22, marginBottom: 4 }}>{medal}</div>
-      <div style={{ width: 52, height: 52, borderRadius: '50%', background: `linear-gradient(135deg, ${color}, ${color}99)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 auto 6px', border: `2px solid ${color}` }}>
-        {entry.name.charAt(0).toUpperCase()}
-      </div>
+      <UserAvatar name={entry.name} size={52} style={{ margin: '0 auto 6px', border: `2px solid ${color}` }} />
       <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)', marginBottom: 2 }}>{entry.name}{entry.isMe ? ' (You)' : ''}</div>
       <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--teal)' }}>{entry.gritPoints}</div>
       <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600 }}>GRIT</div>
@@ -172,9 +169,7 @@ function RankRow({ entry }: { entry: LeaderEntry }) {
       <div style={{ width: 28, textAlign: 'center', fontSize: 13, fontWeight: 800, color: entry.isMe ? 'var(--teal)' : 'var(--text-muted)', flexShrink: 0 }}>
         #{entry.rank}
       </div>
-      <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'linear-gradient(135deg, var(--teal), #005f60)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
-        {entry.name.charAt(0).toUpperCase()}
-      </div>
+      <UserAvatar name={entry.name} size={38} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--text)' }}>{entry.name}{entry.isMe ? ' (You)' : ''}</span>

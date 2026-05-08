@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Send, Shield, AlertTriangle, MapPin, ChevronLeft, Loader } from 'lucide-react';
 import { chatAPI, matchAPI } from '../services/api';
+import UserAvatar from '../components/common/UserAvatar';
 import { useAuthStore } from '../store/authStore';
 import { Match, Message } from '../types';
 import toast from 'react-hot-toast';
@@ -85,7 +86,7 @@ export default function ChatPage() {
               const peer = m.peer;
               return (
                 <div key={m._id} onClick={() => navigate(`/chat/${pid}`)} style={{ background: '#fff', borderRadius: 14, padding: '14px 16px', border: '1px solid var(--border)', display: 'flex', gap: 12, alignItems: 'center', cursor: 'pointer' }}>
-                  <div style={avatarSm}>{peer?.name?.charAt(0).toUpperCase() || '?'}</div>
+                  <UserAvatar name={peer?.name} avatar={peer?.avatar} size={40} />
                   <div>
                     <div style={{ fontWeight: 600, fontSize: 14 }}>{peer?.name || 'VyaMate User'}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{peer?.fitnessLevel} · Tap to chat</div>
@@ -106,7 +107,7 @@ export default function ChatPage() {
         <button onClick={() => navigate('/chat')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--teal)', display: 'flex' }}>
           <ChevronLeft size={22} />
         </button>
-        <div style={avatarSm}>{activePeer?.name?.charAt(0).toUpperCase() || '?'}</div>
+        <UserAvatar name={activePeer?.name} avatar={activePeer?.avatar} size={36} />
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: 14 }}>{activePeer?.name || 'VyaMate User'}</div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Mutual match · Chat enabled</div>

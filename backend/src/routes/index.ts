@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getMe, updateProfile } from '../controllers/authController';
+import { register, login, getMe, updateProfile, uploadAvatar as uploadAvatarCtrl } from '../controllers/authController';
 import { authenticateToken } from '../middleware/auth';
 import {
   discoverNeighbors, discoverPeers, sendRequest, respondToRequest,
@@ -17,17 +17,28 @@ import { v4 as uuid } from 'uuid';
 
 const router = Router();
 
+const uploadsDir = path.join(process.cwd(), 'uploads');
+const avatarsDir = path.join(uploadsDir, 'avatars');
+[uploadsDir, avatarsDir].forEach(d => { const fs = require('fs'); if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
+
 const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, path.join(process.cwd(), 'uploads')),
+  destination: (_req, _file, cb) => cb(null, uploadsDir),
   filename: (_req, file, cb) => cb(null, `${uuid()}${path.extname(file.originalname)}`),
 });
 const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
+
+const avatarStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, avatarsDir),
+  filename: (_req, file, cb) => cb(null, `${uuid()}${path.extname(file.originalname)}`),
+});
+const uploadAvatar = multer({ storage: avatarStorage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // Auth
 router.post('/auth/register', register);
 router.post('/auth/login', login);
 router.get('/auth/me', authenticateToken, getMe);
 router.put('/auth/profile', authenticateToken, updateProfile);
+router.post('/auth/avatar', authenticateToken, uploadAvatar.single('avatar'), uploadAvatarCtrl);
 
 // Matching
 router.get('/match/neighbors', authenticateToken, discoverNeighbors);

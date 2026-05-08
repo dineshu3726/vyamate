@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight } from 'lucide-react';
+import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight, Camera } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { authAPI, matchAPI } from '../services/api';
+import UserAvatar from '../components/common/UserAvatar';
 import { ACTIVITIES, SCHEDULES, FITNESS_LEVELS, ENDORSEMENTS } from '../types';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -16,6 +17,21 @@ export default function ProfilePage() {
   const [schedule, setSchedule] = useState<string[]>(user?.schedule || []);
   const [loading, setLoading] = useState(false);
   const [locating, setLocating] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    try {
+      const form = new FormData();
+      form.append('avatar', file);
+      const res = await authAPI.uploadAvatar(form);
+      updateUser(res.data);
+      toast.success('Photo updated!');
+    } catch { toast.error('Failed to upload photo'); }
+    finally { setUploadingAvatar(false); }
+  }
   const [pendingTab, setPendingTab] = useState(false);
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [showPending, setShowPending] = useState(false);
@@ -78,8 +94,17 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <div style={{ background: 'linear-gradient(135deg, var(--teal), #005f60)', borderRadius: 20, padding: '24px 20px', marginBottom: 16, color: '#fff', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 900, flexShrink: 0 }}>
-            {user?.name?.charAt(0).toUpperCase()}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <UserAvatar
+              name={user?.name}
+              avatar={user?.avatar}
+              size={64}
+              style={{ border: '3px solid rgba(255,255,255,0.4)' }}
+            />
+            <label style={{ position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, background: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }}>
+              {uploadingAvatar ? <div style={{ width: 10, height: 10, border: '2px solid var(--teal)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> : <Camera size={11} color="var(--teal)" />}
+              <input type="file" accept="image/*" onChange={handleAvatarChange} style={{ display: 'none' }} />
+            </label>
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 20, fontWeight: 800 }}>{user?.name}</div>
@@ -124,9 +149,7 @@ export default function ProfilePage() {
         <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
           {pendingRequests.map(r => (
             <div key={r._id} style={{ background: 'var(--teal-light)', borderRadius: 12, padding: '12px 14px', border: '1px solid #c0e9e9', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
-                {r.sender?.name?.charAt(0).toUpperCase() || '?'}
-              </div>
+              <UserAvatar name={r.sender?.name} avatar={r.sender?.avatar} size={36} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 13 }}>{r.sender?.name}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{r.sender?.fitnessLevel} · {r.sender?.activities?.join(', ')}</div>

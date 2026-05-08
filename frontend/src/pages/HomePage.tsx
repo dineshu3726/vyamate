@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Users, Info, UserPlus, Loader, Navigation, Radio, X, Plus, Clock } from 'lucide-react';
 import { matchAPI, beaconAPI } from '../services/api';
+import UserAvatar from '../components/common/UserAvatar';
 import { useAuthStore } from '../store/authStore';
 import { MatchUser, Beacon, ACTIVITIES, FITNESS_LEVELS } from '../types';
 import toast from 'react-hot-toast';
@@ -151,9 +152,7 @@ export default function HomePage() {
             {beacons.map(b => (
               <div key={b._id} style={{ background: b.isOwn ? '#E0F5F5' : '#fff', border: `1.5px solid ${b.isOwn ? 'var(--teal)' : 'var(--border)'}`, borderRadius: 12, padding: '12px 14px' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, var(--teal), #005f60)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, color: '#fff', flexShrink: 0 }}>
-                    {b.author.name.charAt(0).toUpperCase()}
-                  </div>
+                  <UserAvatar name={b.author.name} size={36} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                       <span style={{ fontWeight: 700, fontSize: 13, color: 'var(--text)' }}>{b.author.name}</span>
@@ -214,7 +213,7 @@ export default function HomePage() {
             <div key={u._id} style={matchCard}>
               {/* Avatar + name */}
               <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 10 }}>
-                <div style={avatarStyle}>{u.name?.charAt(0).toUpperCase()}</div>
+                <UserAvatar name={u.name} avatar={u.avatar} size={48} />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>{u.name}</span>
@@ -382,12 +381,6 @@ const toggleBtn = (active: boolean): React.CSSProperties => ({
 const matchCard: React.CSSProperties = {
   background: '#fff', borderRadius: 16, padding: '16px',
   boxShadow: '0 2px 12px rgba(0,156,157,0.06)', border: '1px solid var(--border)',
-};
-const avatarStyle: React.CSSProperties = {
-  width: 48, height: 48, borderRadius: '50%',
-  background: 'linear-gradient(135deg, var(--teal), #005f60)',
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontSize: 18, fontWeight: 800, color: '#fff', flexShrink: 0,
 };
 const selectStyle: React.CSSProperties = {
   padding: '7px 10px', border: '1.5px solid var(--border)', borderRadius: 8,

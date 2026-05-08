@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bookmark, Users, Crown, Camera, X, Loader, Plus } from 'lucide-react';
 import { shortsAPI, templateAPI } from '../services/api';
+import UserAvatar from '../components/common/UserAvatar';
 import { Short, ACTIVITIES } from '../types';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
@@ -96,7 +97,7 @@ export default function ShortsPage() {
 
               {/* Author */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <div style={miniAvatar}>{s.author?.name?.charAt(0).toUpperCase() || '?'}</div>
+                <UserAvatar name={s.author?.name} avatar={s.author?.avatar} size={36} />
                 <div>
                   <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 5 }}>
                     {s.author?.name || 'VyaMate User'}
@@ -246,12 +247,6 @@ function CreateShortModal({ onClose, onCreated }: { onClose: () => void; onCreat
 const shortCard: React.CSSProperties = {
   background: '#fff', borderRadius: 16, padding: '16px',
   boxShadow: '0 2px 12px rgba(0,156,157,0.06)', border: '1px solid var(--border)',
-};
-const miniAvatar: React.CSSProperties = {
-  width: 36, height: 36, borderRadius: '50%',
-  background: 'linear-gradient(135deg, var(--teal), #005f60)',
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontSize: 14, fontWeight: 800, color: '#fff', flexShrink: 0,
 };
 const lbl: React.CSSProperties = { display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6, color: 'var(--text)' };
 const inp: React.CSSProperties = { width: '100%', padding: '11px 14px', border: '1.5px solid var(--border)', borderRadius: 10, fontSize: 14, color: 'var(--text)', background: '#fff', outline: 'none' };

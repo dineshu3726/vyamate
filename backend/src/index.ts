@@ -31,7 +31,7 @@ app.use(express.json({ limit: '10mb' }));
 // Rate limiting
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { error: 'Too many requests' } }));
 
-// Static uploads
+// Static uploads (includes /uploads/avatars/)
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'VyaMate' }));

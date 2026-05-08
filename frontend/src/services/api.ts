@@ -22,6 +22,7 @@ export const authAPI = {
   login: (d: any) => api.post('/auth/login', d),
   me: () => api.get('/auth/me'),
   updateProfile: (d: any) => api.put('/auth/profile', d),
+  uploadAvatar: (form: FormData) => api.post('/auth/avatar', form, { headers: { 'Content-Type': 'multipart/form-data' } }),
 };
 
 export const matchAPI = {
