@@ -12,5 +12,23 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
+      # Set this to your Vercel frontend URL (e.g. https://vyamate.vercel.app)
       - key: FRONTEND_URL
+        sync: false
+      # SMTP — required for Forgot Password emails
+      # Use Gmail App Password (not your regular Gmail password)
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      # VAPID keys for Web Push Notifications (already generated)
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
         sync: false
