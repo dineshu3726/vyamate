@@ -13,6 +13,7 @@ import { getLeaderboard } from '../controllers/leaderboardController';
 import { createTemplate, getMyTemplates, getPublicTemplates, saveTemplate, saveFromShort, deleteTemplate } from '../controllers/templateController';
 import { logSession, getSessionHistory, deleteSession } from '../controllers/sessionController';
 import { getAISuggestions } from '../controllers/aiController';
+import { getHabits, createHabit, deleteHabit, logHabit, unlogHabit } from '../controllers/habitController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -91,5 +92,12 @@ router.get('/beacons', authenticateToken, getNearbyBeacons);
 router.post('/beacons', authenticateToken, createBeacon);
 router.post('/beacons/:id/join', authenticateToken, joinBeacon);
 router.delete('/beacons/:id', authenticateToken, deleteBeacon);
+
+// Habits
+router.get('/habits', authenticateToken, getHabits);
+router.post('/habits', authenticateToken, createHabit);
+router.delete('/habits/:id', authenticateToken, deleteHabit);
+router.post('/habits/:id/log', authenticateToken, logHabit);
+router.delete('/habits/:id/log', authenticateToken, unlogHabit);
 
 export default router;

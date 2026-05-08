@@ -119,3 +119,26 @@ export const ACTIVITIES = ['Running','Cycling','Yoga','Powerlifting','HIIT','Swi
 export const SCHEDULES = ['Early Morning (5-7am)','Morning (7-9am)','Midday (11am-1pm)','Afternoon (3-5pm)','Evening (5-7pm)','Night (7-9pm)','Weekends Only'];
 export const FITNESS_LEVELS = ['Beginner','Intermediate','Advanced'] as const;
 export const ENDORSEMENTS = ['Punctual','Motivating','Knowledgeable','Supportive','Fun'];
+
+export interface Habit {
+  _id: string;
+  userId: string;
+  name: string;
+  emoji: string;
+  color: string;
+  frequency: 'daily' | 'weekdays' | 'weekends' | 'custom';
+  targetDays: number[]; // 0=Sun, 1=Mon, ..., 6=Sat
+  category: string;
+  currentStreak: number;
+  longestStreak: number;
+  totalCompletions: number;
+  completionRate: number;
+  completedToday: boolean;
+  recentDates: string[]; // YYYY-MM-DD sorted desc, last 84 days
+  createdAt: string;
+}
+
+export interface HabitProgress {
+  done: number;
+  total: number;
+}

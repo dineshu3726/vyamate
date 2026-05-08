@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, Play, MessageCircle, User, Trophy, Map } from 'lucide-react';
+import { Home, Play, MessageCircle, User, Trophy, Map, Target } from 'lucide-react';
 import VyaMateLogo from '../common/VyaMateLogo';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
 
@@ -45,7 +45,7 @@ export default function AppShell() {
         {[
           { to: '/', icon: Home, label: 'Discover' },
           { to: '/shorts', icon: Play, label: 'Shorts' },
-          { to: '/map', icon: Map, label: 'Map' },
+          { to: '/habits', icon: Target, label: 'Habits' },
           { to: '/leaderboard', icon: Trophy, label: 'Ranks' },
           { to: '/chat', icon: MessageCircle, label: 'Chat' },
           { to: '/profile', icon: User, label: 'Profile' },

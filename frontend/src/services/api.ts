@@ -80,3 +80,11 @@ export const beaconAPI = {
 };
 
 export default api;
+
+export const habitAPI = {
+  getAll: () => api.get('/habits'),
+  create: (d: any) => api.post('/habits', d),
+  delete: (id: string) => api.delete(`/habits/${id}`),
+  log: (id: string, date?: string) => api.post(`/habits/${id}/log`, { date }),
+  unlog: (id: string, date?: string) => api.delete(`/habits/${id}/log`, { params: { date } }),
+};

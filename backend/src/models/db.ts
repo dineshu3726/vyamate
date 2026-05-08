@@ -18,6 +18,10 @@ export const reportsDb = makeDb('reports');
 export const subscriptionsDb = makeDb('subscriptions');
 export const beaconsDb = makeDb('beacons');
 export const templatesDb = makeDb('templates');
+export const habitsDb = makeDb('habits');
+export const habitLogsDb = makeDb('habitLogs');
 
 usersDb.ensureIndex({ fieldName: 'email', unique: true });
 matchesDb.ensureIndex({ fieldName: 'userIds' });
+habitLogsDb.ensureIndex({ fieldName: 'habitId' });
+habitLogsDb.ensureIndex({ fieldName: 'userId' });
