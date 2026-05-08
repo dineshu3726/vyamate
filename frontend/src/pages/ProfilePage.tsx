@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight, Camera } from 'lucide-react';
+import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight, Camera, Flame } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { authAPI, matchAPI } from '../services/api';
 import UserAvatar from '../components/common/UserAvatar';
@@ -227,6 +227,20 @@ export default function ProfilePage() {
           </div>
         </>
       )}
+
+      {/* Session History */}
+      <div onClick={() => navigate('/sessions')} style={{ ...section, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: '#FFF3E0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Flame size={18} color="#F59E0B" />
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Session History</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Log workouts & track your streak</div>
+          </div>
+        </div>
+        <ChevronRight size={18} color="var(--text-muted)" />
+      </div>
 
       {/* Workout Templates */}
       <div onClick={() => navigate('/templates')} style={{ ...section, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>

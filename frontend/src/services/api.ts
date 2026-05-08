@@ -62,6 +62,12 @@ export const leaderboardAPI = {
     api.get(`/leaderboard?type=${type}&radius=${radius}`),
 };
 
+export const sessionAPI = {
+  getHistory: () => api.get('/sessions'),
+  log: (d: any) => api.post('/sessions', d),
+  delete: (id: string) => api.delete(`/sessions/${id}`),
+};
+
 export const beaconAPI = {
   getAll: () => api.get('/beacons'),
   create: (d: any) => api.post('/beacons', d),

@@ -95,6 +95,18 @@ export interface Beacon {
   createdAt: string;
 }
 
+export interface Session {
+  _id: string;
+  userId: string;
+  activity: string;
+  durationMinutes: number;
+  notes: string;
+  templateId: string | null;
+  gritPointsEarned: number;
+  completedAt: string;
+  createdAt: string;
+}
+
 export interface Message {
   _id: string;
   from: string;

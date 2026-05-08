@@ -11,6 +11,7 @@ import { subscribe, unsubscribe, getVapidPublicKey } from '../controllers/pushCo
 import { createBeacon, getNearbyBeacons, joinBeacon, deleteBeacon } from '../controllers/beaconController';
 import { getLeaderboard } from '../controllers/leaderboardController';
 import { createTemplate, getMyTemplates, getPublicTemplates, saveTemplate, saveFromShort, deleteTemplate } from '../controllers/templateController';
+import { logSession, getSessionHistory, deleteSession } from '../controllers/sessionController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -75,6 +76,11 @@ router.post('/templates', authenticateToken, createTemplate);
 router.post('/templates/:id/save', authenticateToken, saveTemplate);
 router.post('/templates/from-short/:shortId', authenticateToken, saveFromShort);
 router.delete('/templates/:id', authenticateToken, deleteTemplate);
+
+// Session History
+router.get('/sessions', authenticateToken, getSessionHistory);
+router.post('/sessions', authenticateToken, logSession);
+router.delete('/sessions/:id', authenticateToken, deleteSession);
 
 // Active Beacons
 router.get('/beacons', authenticateToken, getNearbyBeacons);
