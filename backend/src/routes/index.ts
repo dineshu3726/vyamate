@@ -10,6 +10,7 @@ import { getMessages, sendMessage, safeWordReport } from '../controllers/chatCon
 import { subscribe, unsubscribe, getVapidPublicKey } from '../controllers/pushController';
 import { createBeacon, getNearbyBeacons, joinBeacon, deleteBeacon } from '../controllers/beaconController';
 import { getLeaderboard } from '../controllers/leaderboardController';
+import { createTemplate, getMyTemplates, getPublicTemplates, saveTemplate, saveFromShort, deleteTemplate } from '../controllers/templateController';
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
@@ -55,6 +56,14 @@ router.post('/push/unsubscribe', authenticateToken, unsubscribe);
 
 // Leaderboard
 router.get('/leaderboard', authenticateToken, getLeaderboard);
+
+// Workout Templates
+router.get('/templates', authenticateToken, getMyTemplates);
+router.get('/templates/public', authenticateToken, getPublicTemplates);
+router.post('/templates', authenticateToken, createTemplate);
+router.post('/templates/:id/save', authenticateToken, saveTemplate);
+router.post('/templates/from-short/:shortId', authenticateToken, saveFromShort);
+router.delete('/templates/:id', authenticateToken, deleteTemplate);
 
 // Active Beacons
 router.get('/beacons', authenticateToken, getNearbyBeacons);

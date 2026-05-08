@@ -14,6 +14,7 @@ import ChatPage from './pages/ChatPage';
 import ProfilePage from './pages/ProfilePage';
 import MatchDetailPage from './pages/MatchDetailPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import WorkoutTemplatesPage from './pages/WorkoutTemplatesPage';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { token, user } = useAuthStore();
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/chat/:peerId" element={<ChatPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/templates" element={<WorkoutTemplatesPage />} />
           <Route path="/match/:userId" element={<MatchDetailPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

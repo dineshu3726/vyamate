@@ -50,6 +50,32 @@ export interface Short {
   createdAt: string;
 }
 
+export interface Exercise {
+  name: string;
+  sets?: number;
+  reps?: number;
+  durationSeconds?: number;
+  notes?: string;
+}
+
+export interface WorkoutTemplate {
+  _id: string;
+  creatorId: string;
+  creatorName: string;
+  fromShortId?: string;
+  name: string;
+  activity: string;
+  fitnessLevel: string;
+  estimatedMinutes: number;
+  description: string;
+  exercises: Exercise[];
+  isPublic: boolean;
+  savedBy: string[];
+  isOwn: boolean;
+  hasSaved?: boolean;
+  createdAt: string;
+}
+
 export interface Beacon {
   _id: string;
   userId: string;

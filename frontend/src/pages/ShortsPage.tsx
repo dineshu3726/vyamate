@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bookmark, Users, Crown, Camera, X, Loader, Plus } from 'lucide-react';
-import { shortsAPI } from '../services/api';
+import { shortsAPI, templateAPI } from '../services/api';
 import { Short, ACTIVITIES } from '../types';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
@@ -33,9 +33,16 @@ export default function ShortsPage() {
 
   async function handleSave(id: string) {
     try {
-      const res = await shortsAPI.save(id);
-      toast.success(res.data.template ? 'Workout template saved!' : 'Short saved!');
+      await shortsAPI.save(id);
+      toast.success('Short saved!');
     } catch { toast.error('Failed to save'); }
+  }
+
+  async function handleJoinSession(shortId: string) {
+    try {
+      await templateAPI.saveFromShort(shortId);
+      toast.success('Workout template saved to your Templates!');
+    } catch { toast.error('Failed to save template'); }
   }
 
   if (loading) return (
@@ -134,12 +141,12 @@ export default function ShortsPage() {
                 </button>
 
                 {s.workoutTemplate && (
-                  <button onClick={() => handleSave(s._id)} style={{
+                  <button onClick={() => handleJoinSession(s._id)} style={{
                     flex: 2, padding: '9px', background: 'var(--teal)', border: 'none',
                     borderRadius: 10, fontSize: 12, fontWeight: 700, color: '#fff', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                   }}>
-                    <Users size={13} /> Join This Session
+                    <Users size={13} /> Save Template
                   </button>
                 )}
 

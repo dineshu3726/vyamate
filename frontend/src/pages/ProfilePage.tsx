@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell } from 'lucide-react';
+import { MapPin, Star, Award, LogOut, Edit3, Check, Navigation, Bell, Dumbbell, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { authAPI, matchAPI } from '../services/api';
 import { ACTIVITIES, SCHEDULES, FITNESS_LEVELS, ENDORSEMENTS } from '../types';
@@ -204,6 +204,20 @@ export default function ProfilePage() {
           </div>
         </>
       )}
+
+      {/* Workout Templates */}
+      <div onClick={() => navigate('/templates')} style={{ ...section, display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--teal-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Dumbbell size={18} color="var(--teal)" />
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>Workout Templates</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Create & save structured workouts</div>
+          </div>
+        </div>
+        <ChevronRight size={18} color="var(--text-muted)" />
+      </div>
 
       {/* Location */}
       <div style={section}>

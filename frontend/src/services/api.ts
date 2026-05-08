@@ -47,6 +47,15 @@ export const chatAPI = {
   safeWord: (reportedUserId: string) => api.post('/chat/safeword', { reportedUserId }),
 };
 
+export const templateAPI = {
+  getMine: () => api.get('/templates'),
+  getPublic: () => api.get('/templates/public'),
+  create: (d: any) => api.post('/templates', d),
+  save: (id: string) => api.post(`/templates/${id}/save`),
+  saveFromShort: (shortId: string) => api.post(`/templates/from-short/${shortId}`),
+  delete: (id: string) => api.delete(`/templates/${id}`),
+};
+
 export const leaderboardAPI = {
   get: (type: 'global' | 'neighborhood', radius = 10) =>
     api.get(`/leaderboard?type=${type}&radius=${radius}`),
